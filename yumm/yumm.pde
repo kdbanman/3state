@@ -1,3 +1,5 @@
+color backCol = #3B3B3B;
+
 //this shit only works on 64 bit machines because it takes
 // 43 bits to describe all 3 state outer totallistic 1D
 // automata
@@ -6,6 +8,10 @@ int screenHeight;
 int cellSize;
 int currentLine;
 int maxLine;
+
+boolean paused;
+color[] pauseBuffer;
+int pauseCellSize;
 
 int habSize;
 
@@ -17,28 +23,32 @@ int[] nextHab;
 //  --> 7625597484987 possible rulesets
 //  --> range is 0L to 7625597484986L
 // this number might actually correspond reversed rule map...
-long rule = 7601533564391L;
+long initialRule = 7601533564391L;
 int[][][] nextMap;
 
 void setup() {
-  screenWidth = 1000;
-  screenHeight = 2000;
-  cellSize = 1;
+  screenWidth = 500;
+  screenHeight = 7000;
+  cellSize = 2;
   
   size(screenWidth, screenHeight);
   currentLine = 0;
   maxLine = screenHeight / cellSize - 1;
   habSize = screenWidth / cellSize;
   
+  paused = false;
+  pauseBuffer = new color[screenWidth * screenHeight];
+  pauseCellSize = 30;
+  
   hab = new int[habSize];
-  hab[habSize/2] = 1;
+  seed();
   nextHab = new int[habSize];
   
   nextMap = new int[3][3][3];
-  makeMap(nextMap, rule);
+  makeMap(nextMap, initialRule);
   
   noStroke();
-  background(#E5E5E5);
+  background(backCol);
 }
 
 void makeMap(int[][][] map, long rule) {
@@ -47,7 +57,6 @@ void makeMap(int[][][] map, long rule) {
   
   while (rule / 3L > 0) {
     map[i][j][k] = (int) (rule % 3L);
-    print(map[i][j][k]);
     rule = rule / 3L;
     k++;
     if (k > 2) {
@@ -75,12 +84,10 @@ void makeMap(int[][][] map, long rule) {
   }
   if (i <= 2) {
     map[i][j][k] = (int) (rule % 3L);
-    print(map[i][j][k]);
   }
   
   while (i<3 && j<3 && k<3) {
     map[i][j][k] = 0;
-    print(map[i][j][k]);
     
     k++;
     if (k > 2) {
@@ -92,6 +99,20 @@ void makeMap(int[][][] map, long rule) {
       i++;
     }
   }
+  
+  println("\n" + mapString());
+}
+
+String mapString() {
+  String ret = "";
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
+      for (int k = 0; k < 3; k++) {
+        ret += nextMap[i][j][k];
+      }
+    }
+  }
+  return ret;
 }
 
 void calculateNext(int[] hab, int[] nextHab, int[][][] nextMap) {
@@ -110,6 +131,13 @@ void swapFromNext(int[] hab, int[] nextHab) {
   }
 }
 
+int getColor(int state) {
+  if (state == 0) return #E5E5E5;
+  else if (state == 1) return #2E40FC;
+  else if (state == 2) return #FCAE2E;
+  else return -1;
+}
+
 void renderLine(int line, int[] hab, int cellSize) {
   for (int i = 0; i < hab.length; i++) {
     if (hab[i] == 0) fill(#E5E5E5);
@@ -119,19 +147,107 @@ void renderLine(int line, int[] hab, int cellSize) {
   }
 }
 
+void seed() {
+  for (int i = 0; i < hab.length; i++) {
+    hab[i] = 0;
+  }
+  hab[hab.length/2] = 1;
+}
+
+void newDraw() {
+  currentLine = 0;
+  background(#E5E5E5);
+  frameRate(60);
+}
+
+void restart() {
+  seed();
+  newDraw();
+}
+
 void draw() {
-  calculateNext(hab, nextHab, nextMap);
-  swapFromNext(hab, nextHab);
-  
-  if (currentLine <= maxLine) {
-    renderLine(currentLine, hab, cellSize);
-    currentLine++;
-  } else {
-    try {
-      save(rule + ".tif");
-    } catch (Exception e) {
-      print("ERROR: save failed.");
+  if (!paused) {
+    calculateNext(hab, nextHab, nextMap);
+    swapFromNext(hab, nextHab);
+    
+    if (currentLine <= maxLine) {
+      renderLine(currentLine, hab, cellSize);
+      currentLine++;
+    } else {
+      try {
+        save(mapString() + ".tif");
+      } catch (Exception e) {
+        print("ERROR: save failed.");
+      }
+      restart();
     }
-    frameRate(0);
+  } else {
+    // NEIGHBORHOOD TRIPLE OFFSETS
+    int xOff = pauseCellSize;
+    int yOff = pauseCellSize;
+    
+    fill(backCol);
+    rect(0, 0, 13*pauseCellSize, 28*pauseCellSize, 15);
+    
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        for (int k = 0; k < 3; k++) {
+          // render neihborhood triple
+          fill(getColor(i));
+          rect(xOff, yOff, pauseCellSize, pauseCellSize, 4);
+          
+          fill(getColor(j));
+          rect(xOff + pauseCellSize, yOff, pauseCellSize, pauseCellSize, 4);
+          
+          fill(getColor(k));
+          rect(xOff + 2 * pauseCellSize, yOff, pauseCellSize, pauseCellSize, 4);
+          
+          // render rule
+          fill(getColor(nextMap[i][j][k]));
+          rect(xOff + pauseCellSize, yOff + pauseCellSize, pauseCellSize, pauseCellSize, 4);
+          
+          xOff += 4 * pauseCellSize;
+        }
+        yOff += 3 * pauseCellSize;
+        xOff = pauseCellSize;
+      }
+    }
+  }
+}
+
+void mouseClicked() {
+  if (paused) {
+    if (mouseX > pauseCellSize && mouseX < 12*pauseCellSize &&
+        mouseY > pauseCellSize && mouseY < 27*pauseCellSize) {
+      int k = (mouseX - pauseCellSize) / (pauseCellSize * 4);
+      int j = ((mouseY - pauseCellSize) / (pauseCellSize * 3)) % 3;
+      int i = ((mouseY - pauseCellSize) / (pauseCellSize * 9)) % 3;
+      
+      nextMap[i][j][k] = (nextMap[i][j][k] + 1) % 3;
+      
+      println(mapString());
+    }
+  }
+}
+
+void keyPressed() {
+  if (key == ' ') {
+    if (!paused) {
+      loadPixels();
+      for (int i = 0; i < pixels.length; i++) {
+        pauseBuffer[i] = pixels[i];
+      }
+        
+      paused = !paused;
+    } else {
+      for (int i = 0; i < pixels.length; i++) {
+        pixels[i] = pauseBuffer[i];
+      }
+      updatePixels();
+      
+      paused = !paused;
+    }
+  } else if (!paused && (key == 'r' || key == 'R')) {
+    restart();
   }
 }
