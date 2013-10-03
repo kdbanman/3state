@@ -23,12 +23,12 @@ int[] nextHab;
 //  --> 7625597484987 possible rulesets
 //  --> range is 0L to 7625597484986L
 // this number might actually correspond reversed rule map...
-long initialRule = 7601533564391L;
+long initialRule = 214582522525L;
 int[][][] nextMap;
 
 void setup() {
   screenWidth = 500;
-  screenHeight = 7000;
+  screenHeight = 900;
   cellSize = 2;
   
   size(screenWidth, screenHeight);
