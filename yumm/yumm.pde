@@ -1,7 +1,8 @@
 //this shit only works on 64 bit machines because it takes
 // 43 bits to describe all 3 state outer totallistic 1D
 // automata
-int screenSize;
+int screenWidth;
+int screenHeight;
 int cellSize;
 int currentLine;
 int maxLine;
@@ -16,17 +17,18 @@ int[] nextHab;
 //  --> 7625597484987 possible rulesets
 //  --> range is 0L to 7625597484986L
 // this number might actually correspond reversed rule map...
-long rule = 2445825251252L;
+long rule = 7601533564391L;
 int[][][] nextMap;
 
 void setup() {
-  screenSize = 1000;
-  cellSize = 5;
+  screenWidth = 1000;
+  screenHeight = 2000;
+  cellSize = 1;
   
-  size(screenSize, screenSize);
+  size(screenWidth, screenHeight);
   currentLine = 0;
-  maxLine = screenSize / cellSize - 1;
-  habSize = screenSize / cellSize;
+  maxLine = screenHeight / cellSize - 1;
+  habSize = screenWidth / cellSize;
   
   hab = new int[habSize];
   hab[habSize/2] = 1;
@@ -125,6 +127,11 @@ void draw() {
     renderLine(currentLine, hab, cellSize);
     currentLine++;
   } else {
+    try {
+      save(rule + ".tif");
+    } catch (Exception e) {
+      print("ERROR: save failed.");
+    }
     frameRate(0);
   }
 }
