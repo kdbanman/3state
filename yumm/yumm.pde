@@ -1,3 +1,15 @@
+import ddf.minim.spi.*;
+import ddf.minim.signals.*;
+import ddf.minim.*;
+import ddf.minim.analysis.*;
+import ddf.minim.ugens.*;
+import ddf.minim.effects.*;
+
+Minim minim;
+AudioOutput out;
+Sounder sounder;
+int sampRate;
+
 color backCol = #3B3B3B;
 
 //this shit only works on 64 bit machines because it takes
@@ -8,6 +20,8 @@ int screenHeight;
 int cellSize;
 int currentLine;
 int maxLine;
+
+int fps;
 
 boolean paused;
 color[] pauseBuffer;
@@ -23,13 +37,16 @@ int[] nextHab;
 //  --> 7625597484987 possible rulesets
 //  --> range is 0L to 7625597484986L
 // this number might actually correspond reversed rule map...
-long initialRule = 214582522525L;
+long initialRule = 5625597486586L;
 int[][][] nextMap;
 
 void setup() {
-  screenWidth = 500;
+  screenWidth = 350;
   screenHeight = 900;
-  cellSize = 2;
+  cellSize = 5;
+  
+  fps = 20;
+  frameRate(fps);
   
   size(screenWidth, screenHeight);
   currentLine = 0;
@@ -38,7 +55,7 @@ void setup() {
   
   paused = false;
   pauseBuffer = new color[screenWidth * screenHeight];
-  pauseCellSize = 30;
+  pauseCellSize = 20;
   
   hab = new int[habSize];
   seed();
@@ -49,6 +66,12 @@ void setup() {
   
   noStroke();
   background(backCol);
+
+  minim = new Minim(this);
+  sampRate = 441;
+  out = minim.getLineOut(Minim.MONO, sampRate);
+  sounder = new Sounder(hab);
+  out.addSignal(sounder);
 }
 
 void makeMap(int[][][] map, long rule) {
@@ -147,9 +170,20 @@ void renderLine(int line, int[] hab, int cellSize) {
   }
 }
 
+//safe to most reasonable screen sizes
+float numerLine(int[] hab) {
+  float place = 1f;
+  float total = Float.MIN_VALUE;
+  for (int i = hab.length - 1 ; i >=0 ; i--) {
+    total += float(hab[i]) * place;
+    place *= 3;
+  }
+  return total;
+}
+
 void seed() {
   for (int i = 0; i < hab.length; i++) {
-    hab[i] = 0;
+    hab[i] = (int) (random(0,300)/100.0f);
   }
   hab[hab.length/2] = 1;
 }
@@ -157,7 +191,7 @@ void seed() {
 void newDraw() {
   currentLine = 0;
   background(#E5E5E5);
-  frameRate(60);
+  frameRate(fps);
 }
 
 void restart() {
@@ -169,6 +203,8 @@ void draw() {
   if (!paused) {
     calculateNext(hab, nextHab, nextMap);
     swapFromNext(hab, nextHab);
+    
+    sounder.update(hab);
     
     if (currentLine <= maxLine) {
       renderLine(currentLine, hab, cellSize);
@@ -249,5 +285,57 @@ void keyPressed() {
     }
   } else if (!paused && (key == 'r' || key == 'R')) {
     restart();
+  }
+}
+
+void stop()
+{
+  out.close();
+  minim.stop();
+ 
+  super.stop();
+}
+
+// WILL ONLY FREQUENCY MATCH FOR SAMPLE RATE OF 4410Hz
+class Sounder implements AudioSignal {
+  
+  float max, curr;
+  
+  float fMin, fMax;
+  
+  Sounder(int[] hab) {
+    super();
+    
+    fMin = 3f;
+    fMax = 20f;
+    
+    max = pow(3f, float(hab.length));
+    curr = 0f;
+  }
+  
+  @Override
+  void generate(float[] samp) {
+    float peaks = map(curr, Float.MIN_VALUE, max, fMin, fMax);
+    float inter = float(samp.length) / peaks;
+    for ( int i = 0; i < samp.length; i += inter )
+    {
+      for ( int j = 0; j < inter && (i+j) < samp.length; j++ )
+      {
+        samp[i + j] = map(j, 0, inter, -1, 1);
+      }
+    }
+  }
+  
+  // this is a stricly mono signal
+  // TODO: blue is left, orange is right
+  @Override
+  void generate(float[] left, float[] right)
+  {
+    generate(left);
+    generate(right);
+  }
+  
+  void update(int[] hab) {
+    curr = numerLine(hab);
   }
 }
