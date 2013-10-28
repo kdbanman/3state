@@ -1,3 +1,8 @@
+/*
+*  this seems to bias shit.  the naive approach to audibilization, where environments
+*  are mapped to magnitudes which are mapped to frequencies, is not that feedback-rich.
+*/
+
 import ddf.minim.spi.*;
 import ddf.minim.signals.*;
 import ddf.minim.*;
