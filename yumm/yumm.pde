@@ -2,9 +2,9 @@ import infospect.InformationSpectrum;
 
 color backCol = #3B3B3B;
 
-int habSize = 50;
+int habSize = 100;
 int cellSize = 4;
-int historySize = 120;
+int historySize = 200;
 
 int currentLine;
 int maxLine;
