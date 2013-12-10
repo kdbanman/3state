@@ -12,6 +12,9 @@ int maxLine;
 boolean paused;
 color[] pauseBuffer;
 int pauseCellSize;
+int menuX;
+int menuY;
+boolean pauseMenuDragging;
 
 // cells are 0, 1, or 2
 int[] hab;
@@ -19,6 +22,8 @@ int[] nextHab;
 // history is a circular buffer of habitats
 int[][] history;
 int historyIndex;
+
+InformationSpectrum[] spectralHistory;
 
 // 27 possible nbrhood states
 //  --> 7625597484987 possible rulesets
@@ -38,19 +43,25 @@ void setup() {
   int screenHeight = cellSize * historySize;
   
   size(screenWidth, screenHeight);
-  currentLine = 0;
-  maxLine = screenHeight / cellSize - 1;
   
   paused = false;
   pauseBuffer = new color[screenWidth * screenHeight];
   pauseCellSize = 15;
+  menuX = 0;
+  menuY = 0;
+  pauseMenuDragging = false;
   
   history = new int[historySize][habSize];
   historyIndex = 0;
   randomizedSeed(history, historyIndex);
   
-  hab = new int[habSize];
-  nextHab = new int[habSize];
+  spectralHistory = new InformationSpectrum[historySize];
+  
+  print("loading...");
+  for (int i = 0; i < historySize; i++) {
+    spectralHistory[i] = new InformationSpectrum(history[i]);
+    print(".");
+  }
   
   nextMap = new int[3][3][3];
   makeMap(nextMap, initialRule);
@@ -59,11 +70,11 @@ void setup() {
   background(backCol);
   frameRate(24);
 }
-
-void renderHistory(int[][] history, int historyIndex, int cellSize) {
+void renderHistory(int[][] history, InformationSpectrum[] spectralHistory, int historyIndex, int cellSize) {
   for (int i = 0; i < history.length; i++) {
-    int circularIndex = (historyIndex + i + 1) % history.length;
+    int circularIndex = (historyIndex + i + 2) % history.length;
     renderLine(i, history[circularIndex], cellSize);
+    renderSpectrumLine(i, spectralHistory[circularIndex], cellSize, history[0].length * cellSize);
   }
 }
 
@@ -76,26 +87,35 @@ void renderLine(int line, int[] hab, int cellSize) {
   }
 }
 
-void newDraw() {
-  currentLine = 0;
-  background(#E5E5E5);
-  frameRate(60);
+void renderSpectrumLine(int line, InformationSpectrum spectrum, int cellSize, int horizOffset) {
+  for (int j = 2; j <= spectrum.getMaxBlockSize(); j++) {
+    int intensity = (int) (255.0 * ((float) spectrum.getBlockSizeRepetitionCount(j)) / ((float) spectrum.getMaxBlockSize()));
+    fill(intensity, intensity, intensity);
+    rect(horizOffset + j * cellSize, line * cellSize, cellSize, cellSize);
+  }
 }
 
 void draw() {
-  background(backCol);
   
   if (!paused) {
+    background(backCol);
+  
     calculateNext(history, historyIndex, nextMap);
-    renderHistory(history, historyIndex, cellSize);
+    analyzeNextSpectrum(history, spectralHistory, historyIndex);
+    renderHistory(history,  spectralHistory, historyIndex, cellSize);
     historyIndex = (historyIndex + 1) % history.length;
   } else {
-    // NEIGHBORHOOD TRIPLE OFFSETS
-    int xOff = pauseCellSize;
-    int yOff = pauseCellSize;
+    
+    for (int i = 0; i < pixels.length; i++) {
+      pixels[i] = pauseBuffer[i];
+    }
+    updatePixels();
     
     fill(backCol);
-    rect(0, 0, 13*pauseCellSize, 28*pauseCellSize, 15);
+    rect(menuX, menuY, 13*pauseCellSize, 28*pauseCellSize, 15);
+    
+    int xOff = menuX + pauseCellSize;
+    int yOff = menuY + pauseCellSize;
     
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
@@ -117,7 +137,7 @@ void draw() {
           xOff += 4 * pauseCellSize;
         }
         yOff += 3 * pauseCellSize;
-        xOff = pauseCellSize;
+        xOff = menuX + pauseCellSize;
       }
     }
   }
@@ -125,16 +145,43 @@ void draw() {
 
 void mouseClicked() {
   if (paused) {
-    if (mouseX > pauseCellSize && mouseX < 12*pauseCellSize &&
-        mouseY > pauseCellSize && mouseY < 27*pauseCellSize) {
-      int k = (mouseX - pauseCellSize) / (pauseCellSize * 4);
-      int j = ((mouseY - pauseCellSize) / (pauseCellSize * 3)) % 3;
-      int i = ((mouseY - pauseCellSize) / (pauseCellSize * 9)) % 3;
+    int menuClickX = mouseX - menuX;
+    int menuClickY = mouseY - menuY;
+    
+    if (menuClickX > pauseCellSize && menuClickX < 12*pauseCellSize &&
+        menuClickY > pauseCellSize && menuClickY < 27*pauseCellSize) {
+      int k = (menuClickX - pauseCellSize) / (pauseCellSize * 4);
+      int j = ((menuClickY - pauseCellSize) / (pauseCellSize * 3)) % 3;
+      int i = ((menuClickY - pauseCellSize) / (pauseCellSize * 9)) % 3;
       
       nextMap[i][j][k] = (nextMap[i][j][k] + 1) % 3;
       
       println(mapString());
     }
+  }
+}
+
+void mousePressed() {
+  if (paused) {
+    int menuClickX = mouseX - menuX;
+    int menuClickY = mouseY - menuY;
+    
+    int dragBoxRadius = pauseCellSize;
+    if (menuClickX > -dragBoxRadius && menuClickX < dragBoxRadius &&
+        menuClickY > -dragBoxRadius && menuClickY < dragBoxRadius) {
+          pauseMenuDragging = true;
+    }
+  }
+}
+
+void mouseReleased() {
+  pauseMenuDragging = false;
+}
+
+void mouseDragged() {
+  if (pauseMenuDragging) {
+    menuX += mouseX - pmouseX;
+    menuY += mouseY - pmouseY;
   }
 }
 
@@ -145,7 +192,10 @@ void keyPressed() {
       for (int i = 0; i < pixels.length; i++) {
         pauseBuffer[i] = pixels[i];
       }
-        
+      
+      menuX = 0;
+      menuY = 0;
+    
       paused = !paused;
     } else {
       for (int i = 0; i < pixels.length; i++) {
@@ -163,7 +213,7 @@ void keyPressed() {
 }
 
 void calculateNext(int[][] history, int historyIndex, int[][][] nextMap) {
-  //handle last member of history in a circular way
+  //handle history in a circular way
   int nextIndex = (historyIndex + 1) % history.length;
   int[] currentHab = history[historyIndex];
   int[] nextHab = history[nextIndex];
@@ -179,6 +229,12 @@ void calculateNext(int[][] history, int historyIndex, int[][][] nextMap) {
   for (int i = 1; i <= nextHab.length - 2; i++) {
     nextHab[i] = nextMap[currentHab[i-1]][currentHab[i]][currentHab[i+1]];
   }
+}
+
+void analyzeNextSpectrum(int[][] history, InformationSpectrum[] spectralHistory, int historyIndex) {
+  //handle history in a circular way
+  int nextIndex = (historyIndex + 1) % history.length;
+  spectralHistory[nextIndex] = new InformationSpectrum(history[nextIndex]);
 }
 
 int getColor(int state) {
