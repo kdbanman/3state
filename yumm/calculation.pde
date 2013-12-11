@@ -29,7 +29,7 @@ void updateRuleFrequency(int[][][] ruleFrequency, int[][] history, int historyIn
   for (int i = 0; i < 3; i ++) {
     for (int j = 0; j < 3; j++) {
       for (int k = 0; k < 3; k++) {
-       ruleFrequency[i][j][k] = ruleFrequency[i][j][k] / 2;
+       ruleFrequency[i][j][k] = 4 * ruleFrequency[i][j][k] / 5;
       }
     }
   }

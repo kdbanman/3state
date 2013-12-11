@@ -33,6 +33,7 @@ InformationSpectrum[] spectralHistory;
 // 43 bits to describe all 3 state outer totallistic 1D
 // automata)
 long initialRule = 214582522525L;
+String stringInitialRule = "221221121220202201101122120";
 int[][][] nextMap;
 
 boolean freezeForError = false;
@@ -69,6 +70,7 @@ void setup() {
   
   nextMap = new int[3][3][3];
   makeMap(nextMap, initialRule);
+  makeMapBase3(nextMap, stringInitialRule);
   
   noStroke();
   background(backCol);
@@ -95,8 +97,8 @@ void mouseClicked() {
   int buttonsClickX = mouseX - menuX + pauseCellSize / 2;
   int buttonsClickY = mouseY - menuY + pauseCellSize / 2;
   
-  if (buttonsClickX > pauseCellSize && buttonsClickX < 12*pauseCellSize &&
-      buttonsClickY > pauseCellSize && buttonsClickY < 27*pauseCellSize) {
+  if (buttonsClickX > pauseCellSize && buttonsClickX < 13*pauseCellSize &&
+      buttonsClickY > pauseCellSize && buttonsClickY < 28*pauseCellSize) {
     int k = (buttonsClickX - pauseCellSize) / (pauseCellSize * 4);
     int j = ((buttonsClickY - pauseCellSize) / (pauseCellSize * 3)) % 3;
     int i = ((buttonsClickY - pauseCellSize) / (pauseCellSize * 9)) % 3;

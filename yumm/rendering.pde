@@ -44,10 +44,12 @@ void renderRuleMenu(int[][][] ruleFrequency) {
       for (int j = 0; j < 3; j++) {
         for (int k = 0; k < 3; k++) {
           
-          // render background square
+          // render background squares
           int intensity = 43 + ruleFrequency[i][j][k] * 3;
           fill(intensity, intensity, intensity);
           rect(xOff - pauseCellSize / 2, yOff - pauseCellSize / 2, pauseCellSize * 4, pauseCellSize * 3, 4);
+          fill(backCol);
+          rect(xOff - pauseCellSize / 6, yOff - pauseCellSize / 6, 20 * pauseCellSize / 6, 14 * pauseCellSize / 6, 4);
           
           // render neihborhood triple
           fill(getColor(i));
