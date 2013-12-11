@@ -1,4 +1,5 @@
 - use (coming) contiguous mode on infospect
+	- maybe.  this is pretty sweet already...
 
 - render change markers in middle bar
 	- render rule change markers in middle bar

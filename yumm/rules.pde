@@ -51,6 +51,22 @@ void makeMap(int[][][] map, long rule) {
   println("\n" + mapString());
 }
 
+void makeMapBase3(int[][][] map, String rule) {
+  if (rule.length() == 27 && rule.matches("[012]*")) {
+    for (int i = 26; i >= 0; i--) {
+      int left = i / 9;
+      int mid = (i / 3) % 3;
+      int right = i % 3;
+      map[left][mid][right] = Integer.valueOf(rule.substring(i, i + 1));
+      println("these should match:");
+      println(rule);
+      println(mapString());
+    }
+  } else {
+    displayError();
+  }
+}
+
 String mapString() {
   String ret = "";
   for (int i = 0; i < 3; i++) {

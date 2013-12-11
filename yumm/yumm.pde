@@ -3,7 +3,7 @@ import infospect.InformationSpectrum;
 color backCol = #3B3B3B;
 
 int habSize = 100;
-int cellSize = 4;
+int cellSize = 5;
 int historySize = 200;
 
 int pauseCellSize = 20;
@@ -34,6 +34,8 @@ InformationSpectrum[] spectralHistory;
 // automata)
 long initialRule = 214582522525L;
 int[][][] nextMap;
+
+boolean freezeForError = false;
 
 void setup() {
   int cellViewWidth = habSize * cellSize;
@@ -88,6 +90,8 @@ void draw() {
 }
 
 void mouseClicked() {
+  loop();
+  
   int buttonsClickX = mouseX - menuX + pauseCellSize / 2;
   int buttonsClickY = mouseY - menuY + pauseCellSize / 2;
   
