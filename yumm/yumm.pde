@@ -88,14 +88,14 @@ void draw() {
 }
 
 void mouseClicked() {
-  int menuClickX = mouseX - menuX;
-  int menuClickY = mouseY - menuY;
+  int buttonsClickX = mouseX - menuX + pauseCellSize / 2;
+  int buttonsClickY = mouseY - menuY + pauseCellSize / 2;
   
-  if (menuClickX > pauseCellSize && menuClickX < 12*pauseCellSize &&
-      menuClickY > pauseCellSize && menuClickY < 27*pauseCellSize) {
-    int k = (menuClickX - pauseCellSize) / (pauseCellSize * 4);
-    int j = ((menuClickY - pauseCellSize) / (pauseCellSize * 3)) % 3;
-    int i = ((menuClickY - pauseCellSize) / (pauseCellSize * 9)) % 3;
+  if (buttonsClickX > pauseCellSize && buttonsClickX < 12*pauseCellSize &&
+      buttonsClickY > pauseCellSize && buttonsClickY < 27*pauseCellSize) {
+    int k = (buttonsClickX - pauseCellSize) / (pauseCellSize * 4);
+    int j = ((buttonsClickY - pauseCellSize) / (pauseCellSize * 3)) % 3;
+    int i = ((buttonsClickY - pauseCellSize) / (pauseCellSize * 9)) % 3;
     
     nextMap[i][j][k] = (nextMap[i][j][k] + 1) % 3;
     
