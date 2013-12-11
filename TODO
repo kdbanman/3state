@@ -1,11 +1,13 @@
-- minimal boundary-less tiles like logan's projecty desnignenigfey thing.  also that thing duncan said.
-
-- reverse history render
-
-- use (coming) contiguous mode on infospect
-	- maybe.  this is pretty sweet already...
+- overlay information frequency distribution as dynamic curve at bottom right
 
 - render change markers in middle bar
 	- render rule change markers in middle bar
 	- render reseed markers in middle bar
+	- rule change markers clickable for rule revert?
+
+- use (coming) contiguous mode on infospect
+	- maybe.  this is pretty sweet already...
+
+- minimal boundary-less tiles like logan's projecty desnignenigfey thing.  also that thing duncan said.
+	- optional mode
 
