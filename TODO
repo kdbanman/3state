@@ -1,4 +1,6 @@
 - use (coming) contiguous mode on infospect
-- constantly visible rule pane with default in top right
-	- increment color of rule square with rule application, decrement with nonusage on every generation
-	- drag on entire edge, not just top left
+
+- render change markers in middle bar
+	- render rule change markers in middle bar
+	- render reseed markers in middle bar
+
