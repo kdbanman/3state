@@ -8,13 +8,16 @@ int historySize = 200;
 
 int pauseCellSize = 20;
 
-int currentLine;
-int maxLine;
+int scopeMagnification = pauseCellSize / cellSize;
+int scopeW = 6;
+int scopeH = 4;
+
+int cellViewWidth;
 
 boolean paused;
 int menuX;
 int menuY;
-boolean pauseMenuDragging;
+boolean menuDragging;
 
 // cells are 0, 1, or 2
 // history is a circular buffer of habitats
@@ -39,7 +42,7 @@ int[][][] nextMap;
 boolean freezeForError = false;
 
 void setup() {
-  int cellViewWidth = habSize * cellSize;
+  cellViewWidth = habSize * cellSize;
   int spectrumViewWidth = (habSize - 2) * cellSize;
   
   int screenWidth = cellViewWidth + spectrumViewWidth;
@@ -51,7 +54,7 @@ void setup() {
   int menuWidth = pauseCellSize * 13;
   menuX = screenWidth - menuWidth;
   menuY = 0;
-  pauseMenuDragging = false;
+  menuDragging = false;
   
   history = new int[historySize][habSize];
   historyIndex = 0;
@@ -69,7 +72,7 @@ void setup() {
   print("\n");
   
   nextMap = new int[3][3][3];
-  makeMap(nextMap, initialRule);
+  //makeMap(nextMap, initialRule);
   makeMapBase3(nextMap, stringInitialRule);
   
   noStroke();
@@ -80,15 +83,33 @@ void setup() {
 void draw() {
   background(backCol);
 
+  // iterate and analyze
   if (!paused) {
     updateRuleFrequency(ruleFrequency, history, historyIndex);
     calculateNext(history, historyIndex, nextMap);
     analyzeNextSpectrum(history, spectralHistory, historyIndex);
     historyIndex = (historyIndex + 1) % history.length;
   }
+  //render
   renderHistory(history,  spectralHistory, historyIndex, cellSize);
-  
+  // load pixels before menu has been rendered to look underneath it
+  loadPixels();
   renderRuleMenu(ruleFrequency);
+  
+  if (mouseX < cellViewWidth && !menuDragging) {
+    int leftBound = mouseX - 6 * cellSize < 0 ? 0 : mouseX - 6 * cellSize;
+    int rightBound = mouseX + 6 * cellSize > cellViewWidth - 1 ? cellViewWidth - 1 : mouseX + 6 * cellSize;
+    int topBound = mouseY  - 4 * cellSize < 0 ? 0 : mouseY - 4 * cellSize;
+    int bottomBound = mouseY + 4 * cellSize > height - 1 ? height - 1 : mouseY + 4 * cellSize;
+    
+    for (int i = leftBound; i <= rightBound; i++) {
+      for (int j = topBound; j <= bottomBound; j++) {
+        fill(pixels[i + width * j]);
+        if (i == mouseX && j == mouseY) fill(backCol);
+        rect(cellViewWidth + 2 * cellSize + (i - leftBound) * scopeMagnification, (j - mouseY) * scopeMagnification + j, scopeMagnification, scopeMagnification + 1, 1);
+      }
+    }
+  }
 }
 
 void mouseClicked() {
@@ -116,16 +137,16 @@ void mousePressed() {
   int dragBoxRadius = pauseCellSize;
   if (menuClickX > -dragBoxRadius && menuClickX < dragBoxRadius &&
       menuClickY > -dragBoxRadius && menuClickY < dragBoxRadius) {
-        pauseMenuDragging = true;
+        menuDragging = true;
   }
 }
 
 void mouseReleased() {
-  pauseMenuDragging = false;
+  menuDragging = false;
 }
 
 void mouseDragged() {
-  if (pauseMenuDragging) {
+  if (menuDragging) {
     menuX += mouseX - pmouseX;
     menuY += mouseY - pmouseY;
   }
@@ -134,9 +155,9 @@ void mouseDragged() {
 void keyPressed() {
   if (key == ' ') {
     paused = !paused;
-  } else if (!paused && key == 'r') {
+  } else if (!paused && key == 'M' && key == 'm') {
     singletSeed(history, historyIndex);
-  } else if (!paused && key == 'R') {
+  } else if (!paused && key == 'R' && key == 'r') {
     randomizedSeed(history, historyIndex);
   }
 }

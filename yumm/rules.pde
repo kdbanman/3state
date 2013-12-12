@@ -58,10 +58,10 @@ void makeMapBase3(int[][][] map, String rule) {
       int mid = (i / 3) % 3;
       int right = i % 3;
       map[left][mid][right] = Integer.valueOf(rule.substring(i, i + 1));
-      println("these should match:");
-      println(rule);
-      println(mapString());
     }
+    println("these should match:");
+    println(rule);
+    println(mapString());
   } else {
     displayError();
   }

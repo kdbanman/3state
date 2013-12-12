@@ -5,8 +5,8 @@ int getColor(int state) {
 //  else if (state == 1) return #2E40FC;
 //  else if (state == 2) return #FCAE2E;
   if (state == 0) return #EBFF9D;
-  else if (state == 1) return #FFB79D;
-  else if (state == 2) return #9DD9FF;
+  else if (state == 1) return #0BB740;
+  else if (state == 2) return #4152E5;
   else return -1;
 }
 
