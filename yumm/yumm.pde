@@ -4,7 +4,7 @@ color backCol = #3B3B3B;
 
 int habSize = 100;
 int cellSize = 5;
-int historySize = 200;
+int historySize = 180;
 
 int pauseCellSize = 20;
 
@@ -97,18 +97,7 @@ void draw() {
   renderRuleMenu(ruleFrequency);
   
   if (mouseX < cellViewWidth && !menuDragging) {
-    int leftBound = mouseX - 6 * cellSize < 0 ? 0 : mouseX - 6 * cellSize;
-    int rightBound = mouseX + 6 * cellSize > cellViewWidth - 1 ? cellViewWidth - 1 : mouseX + 6 * cellSize;
-    int topBound = mouseY  - 4 * cellSize < 0 ? 0 : mouseY - 4 * cellSize;
-    int bottomBound = mouseY + 4 * cellSize > height - 1 ? height - 1 : mouseY + 4 * cellSize;
-    
-    for (int i = leftBound; i <= rightBound; i++) {
-      for (int j = topBound; j <= bottomBound; j++) {
-        fill(pixels[i + width * j]);
-        if (i == mouseX && j == mouseY) fill(backCol);
-        rect(cellViewWidth + 2 * cellSize + (i - leftBound) * scopeMagnification, (j - mouseY) * scopeMagnification + j, scopeMagnification, scopeMagnification + 1, 1);
-      }
-    }
+    renderCellViewScope();
   }
 }
 
@@ -155,10 +144,11 @@ void mouseDragged() {
 void keyPressed() {
   if (key == ' ') {
     paused = !paused;
-  } else if (!paused && key == 'M' && key == 'm') {
+  } else if (!paused && (key == 'M' || key == 'm')) {
     singletSeed(history, historyIndex);
-  } else if (!paused && key == 'R' && key == 'r') {
+  } else if (!paused && (key == 'R' || key == 'r')) {
     randomizedSeed(history, historyIndex);
+    println("here");
   }
 }
 

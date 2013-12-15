@@ -4,9 +4,9 @@ int getColor(int state) {
 //  if (state == 0) return #E5E5E5;
 //  else if (state == 1) return #2E40FC;
 //  else if (state == 2) return #FCAE2E;
-  if (state == 0) return #EBFF9D;
-  else if (state == 1) return #0BB740;
-  else if (state == 2) return #4152E5;
+  if (state == 0) return #4D5CDB;
+  else if (state == 1) return #DED52B;
+  else if (state == 2) return #F2E1E1;
   else return -1;
 }
 
@@ -78,4 +78,19 @@ void renderRuleMenu(int[][][] ruleFrequency) {
     fill(backCol);
     ellipse(menuX + pauseCellSize / 3, menuY + pauseCellSize / 3, pauseCellSize / 6, pauseCellSize / 2);
     ellipse(menuX + pauseCellSize / 3, menuY + pauseCellSize / 3, pauseCellSize / 2, pauseCellSize / 6);
+}
+
+void renderCellViewScope() {
+  int leftBound = mouseX - 6 * cellSize < 0 ? 0 : mouseX - 6 * cellSize;
+  int rightBound = mouseX + 6 * cellSize > cellViewWidth - 1 ? cellViewWidth - 1 : mouseX + 6 * cellSize;
+  int topBound = mouseY  - 4 * cellSize < 0 ? 0 : mouseY - 4 * cellSize;
+  int bottomBound = mouseY + 4 * cellSize > height - 1 ? height - 1 : mouseY + 4 * cellSize;
+  
+  for (int i = leftBound; i <= rightBound; i++) {
+    for (int j = topBound; j <= bottomBound; j++) {
+      fill(pixels[i + width * j]);
+      if (i == mouseX && j == mouseY) fill(backCol);
+      rect(cellViewWidth + 2 * cellSize + (i - leftBound) * scopeMagnification, (j - mouseY) * scopeMagnification + mouseY, scopeMagnification, scopeMagnification, 1);
+    }
+  }
 }
