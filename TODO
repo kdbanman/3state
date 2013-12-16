@@ -1,4 +1,7 @@
 - overlay information frequency distribution as dynamic curve at bottom right
+	- draggable left and right boundary bars for use with sound interface
+
+- add rule outliner to scope
 
 - render change markers in middle bar
 	- render rule change markers in middle bar

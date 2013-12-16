@@ -78,10 +78,10 @@ void renderRuleMenu(int[][][] ruleFrequency) {
 }
 
 void renderCellViewScope() {
-  int leftBound = mouseX - 6 * cellSize < 0 ? 0 : mouseX - 6 * cellSize;
-  int rightBound = mouseX + 6 * cellSize > cellViewWidth - 1 ? cellViewWidth - 1 : mouseX + 6 * cellSize;
-  int topBound = mouseY  - 4 * cellSize < 0 ? 0 : mouseY - 4 * cellSize;
-  int bottomBound = mouseY + 4 * cellSize > height - 1 ? height - 1 : mouseY + 4 * cellSize;
+  int leftBound = mouseX - scopeWidth * cellSize < 0 ? 0 : mouseX - scopeWidth * cellSize;
+  int rightBound = mouseX + scopeWidth * cellSize > cellViewWidth - 1 ? cellViewWidth - 1 : mouseX + scopeWidth * cellSize;
+  int topBound = mouseY  - scopeHeight * cellSize < 0 ? 0 : mouseY - scopeHeight * cellSize;
+  int bottomBound = mouseY + scopeHeight * cellSize > height - 1 ? height - 1 : mouseY + scopeHeight * cellSize;
   
   for (int i = leftBound; i <= rightBound; i++) {
     for (int j = topBound; j <= bottomBound; j++) {

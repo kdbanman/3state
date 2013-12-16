@@ -1,16 +1,16 @@
 import infospect.InformationSpectrum;
 
-color backCol = #3B3B3B;
+color backCol = #1c1c1c;
 
 int habSize = 100;
 int cellSize = 5;
 int historySize = 180;
 
-int pauseCellSize = 20;
+int pauseCellSize = 19;
 
 int scopeMagnification = pauseCellSize / cellSize;
-int scopeW = 6;
-int scopeH = 4;
+int scopeWidth = 8;
+int scopeHeight = 6;
 
 int cellViewWidth;
 
