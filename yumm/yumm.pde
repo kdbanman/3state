@@ -12,6 +12,8 @@ int scopeMagnification = pauseCellSize / cellSize;
 int scopeWidth = 8;
 int scopeHeight = 6;
 
+int framerate = 24;
+
 int cellViewWidth;
 
 boolean paused;
@@ -77,7 +79,7 @@ void setup() {
   
   noStroke();
   background(backCol);
-  frameRate(24);
+  frameRate(framerate);
 }
 
 void draw() {
