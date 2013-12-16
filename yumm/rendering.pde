@@ -1,12 +1,9 @@
 
 
 int getColor(int state) {
-//  if (state == 0) return #E5E5E5;
-//  else if (state == 1) return #2E40FC;
-//  else if (state == 2) return #FCAE2E;
-  if (state == 0) return #4D5CDB;
-  else if (state == 1) return #DED52B;
-  else if (state == 2) return #F2E1E1;
+  if (state == 0) return #4c9897;
+  else if (state == 1) return #a48f50;
+  else if (state == 2) return #7c110e;
   else return -1;
 }
 
