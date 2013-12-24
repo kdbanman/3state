@@ -4,7 +4,7 @@ color backCol = #1c1c1c;
 
 int habSize = 80;
 int cellSize = 5;
-int historySize = 150;
+int renderedHistory = 160;
 
 int pauseCellSize = 19;
 
@@ -13,6 +13,7 @@ int scopeWidth = 8;
 int scopeHeight = 6;
 
 int framerate = 24;
+int historySize = 200;
 
 boolean contiguousSpectrum = true;
 
@@ -50,7 +51,7 @@ void setup() {
   int spectrumViewWidth = (habSize - 2) * cellSize;
   
   int screenWidth = cellViewWidth + spectrumViewWidth;
-  int screenHeight = cellSize * historySize;
+  int screenHeight = cellSize * renderedHistory;
   
   size(screenWidth, screenHeight);
   
@@ -68,16 +69,20 @@ void setup() {
   
   spectralHistory = new InformationSpectrum[historySize];
   
-  print("loading...");
+  println("loading");
+  int prev = 0;
   for (int i = 0; i < historySize; i++) {
     spectralHistory[i] = new InformationSpectrum(history[i], contiguousSpectrum);
-    print(".");
+    if (int(float(i) / float(historySize) * 10) > prev) {
+      prev++;
+      println(prev * 10 + "%");
+    }
   }
-  print("\n");
+  println("100%");
   
   nextMap = new int[3][3][3];
-  //makeMap(nextMap, initialRule);
-  makeMapBase3(nextMap, stringInitialRule);
+  makeMap(nextMap, initialRule);
+  //makeMapBase3(nextMap, stringInitialRule);
   
   noStroke();
   background(backCol);
@@ -95,7 +100,7 @@ void draw() {
     historyIndex = (historyIndex + 1) % history.length;
   }
   //render
-  renderHistory(history,  spectralHistory, historyIndex, cellSize);
+  renderHistory(history,  spectralHistory, historyIndex, renderedHistory, cellSize);
   // load pixels before menu has been rendered to look underneath it
   loadPixels();
   renderRuleMenu(ruleFrequency);
@@ -119,7 +124,7 @@ void mouseClicked() {
     
     nextMap[i][j][k] = (nextMap[i][j][k] + 1) % 3;
     
-    println(mapString());
+    println(mapString(nextMap));
   }
 }
 

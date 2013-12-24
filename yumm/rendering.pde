@@ -1,14 +1,12 @@
-
-
 int getColor(int state) {
   if (state == 0) return #4c9897;
   else if (state == 1) return #a48f50;
   else if (state == 2) return #7c110e;
-  else return -1;
+  else return 0;
 }
 
-void renderHistory(int[][] history, InformationSpectrum[] spectralHistory, int historyIndex, int cellSize) {
-  for (int i = 0; i < history.length; i++) {
+void renderHistory(int[][] history, InformationSpectrum[] spectralHistory, int historyIndex, int renderedHistory, int cellSize) {
+  for (int i = 0; i < renderedHistory; i++) {
     int circularIndex = (historyIndex + i + 1) % history.length;
     renderLine(i, history[circularIndex], cellSize);
     renderSpectrumLine(i, spectralHistory[circularIndex], cellSize, history[0].length * cellSize);

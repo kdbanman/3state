@@ -48,7 +48,7 @@ void makeMap(int[][][] map, long rule) {
     }
   }
   
-  println("\n" + mapString());
+  println("\n" + mapString(map));
 }
 
 void makeMapBase3(int[][][] map, String rule) {
@@ -59,20 +59,18 @@ void makeMapBase3(int[][][] map, String rule) {
       int right = i % 3;
       map[left][mid][right] = Integer.valueOf(rule.substring(i, i + 1));
     }
-    println("these should match:");
-    println(rule);
-    println(mapString());
+    println("\n" + mapString(map));
   } else {
     displayError();
   }
 }
 
-String mapString() {
+String mapString(int[][][] map) {
   String ret = "";
   for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 3; j++) {
       for (int k = 0; k < 3; k++) {
-        ret += nextMap[i][j][k];
+        ret += map[i][j][k];
       }
     }
   }
