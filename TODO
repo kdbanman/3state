@@ -1,16 +1,24 @@
+- scrollable history when paused
+
+- save/load
+	- either use selectFolder() function or write my own bitchin' interface (the latter would be good so that navigating the saved rules looks sweet/informative)
+
+- undoable rule changes
+	- it would be good if this were somehow informative, because just seeing the rule menu change won't be very good.  perhaps the change marker system that's coming
+
+- simultaneous render of contiguous and non contiguous to see which one is better.  the former has more intricate structure, but maybe they offer distinct enough information to render one from the right in one color and another from the left in another color
+
 - overlay information frequency distribution as dynamic curve at bottom right
 	- draggable left and right boundary bars for use with sound interface
+
+- implement waveform generator based upon InformationSpectrum parameters and framerate.
 
 - add rule outliner to scope
 
 - render change markers in middle bar
 	- render rule change markers in middle bar
 	- render reseed markers in middle bar
-	- rule change markers clickable for rule revert?
 
-- use (coming) contiguous mode on infospect
-	- maybe.  this is pretty sweet already...
-
-- minimal boundary-less tiles like logan's projecty desnignenigfey thing.  also that thing duncan said.
+- minimal boundary-less tiles like logan's projecty desnignenigfey thing.  also that thing duncan said with the 3d.
 	- optional mode
 
