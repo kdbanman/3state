@@ -23,10 +23,11 @@ void renderLine(int line, int[] hab, int cellSize) {
 }
 
 void renderSpectrumLine(int line, InformationSpectrum spectrum, int cellSize, int horizOffset) {
-  for (int j = 2; j <= spectrum.getMaxBlockSize(); j++) {
-    int intensity = (int) (255.0 * ((float) spectrum.getBlockSizeRepetitionCount(j)) / ((float) spectrum.getMaxBlockSize()));
+  for (int j = spectrum.getMinBlockSize(); j <= spectrum.getMaxBlockSize(); j++) {
+    int intensity = (int) (255.0 * ((float) spectrum.getBlockSizeFrequency(j)) / ((float) spectrum.getMaxBlockSize()));
     fill(intensity, intensity, intensity);
-    rect(horizOffset + j * cellSize, line * cellSize, cellSize, cellSize);
+    int cellWidth = contiguousSpectrum ? cellSize * 2 : cellSize;
+    rect(horizOffset + j * cellWidth, line * cellSize, cellWidth, cellSize);
   }
 }
 
@@ -48,6 +49,10 @@ void renderRuleMenu(int[][][] ruleFrequency) {
           fill(backCol);
           rect(xOff - pauseCellSize / 6, yOff - pauseCellSize / 6, 20 * pauseCellSize / 6, 14 * pauseCellSize / 6, 4);
           
+          // render mouse highlight
+          if (mouseX > xOff - pauseCellSize / 2 && mouseX < xOff + 7 * pauseCellSize / 2 &&
+              mouseY > yOff - pauseCellSize / 2 && mouseY < yOff + 5 * pauseCellSize / 2) stroke(#FFFFFF);
+              
           // render neihborhood triple
           fill(getColor(i));
           rect(xOff, yOff, pauseCellSize, pauseCellSize, 4);
@@ -61,6 +66,8 @@ void renderRuleMenu(int[][][] ruleFrequency) {
           // render rule
           fill(getColor(nextMap[i][j][k]));
           rect(xOff + pauseCellSize, yOff + pauseCellSize, pauseCellSize, pauseCellSize, 4);
+          
+          noStroke();
           
           xOff += 4 * pauseCellSize;
         }

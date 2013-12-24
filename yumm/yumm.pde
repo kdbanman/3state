@@ -2,9 +2,9 @@ import infospect.InformationSpectrum;
 
 color backCol = #1c1c1c;
 
-int habSize = 100;
+int habSize = 80;
 int cellSize = 5;
-int historySize = 180;
+int historySize = 150;
 
 int pauseCellSize = 19;
 
@@ -13,6 +13,8 @@ int scopeWidth = 8;
 int scopeHeight = 6;
 
 int framerate = 24;
+
+boolean contiguousSpectrum = true;
 
 int cellViewWidth;
 
@@ -68,7 +70,7 @@ void setup() {
   
   print("loading...");
   for (int i = 0; i < historySize; i++) {
-    spectralHistory[i] = new InformationSpectrum(history[i]);
+    spectralHistory[i] = new InformationSpectrum(history[i], contiguousSpectrum);
     print(".");
   }
   print("\n");
