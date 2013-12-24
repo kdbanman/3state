@@ -28,6 +28,7 @@ boolean menuDragging;
 // history is a circular buffer of habitats
 int[][] history;
 int historyIndex;
+int historyIndexBeforePause;
 
 int[][][] ruleFrequency;
 
@@ -150,9 +151,20 @@ void mouseDragged() {
   }
 }
 
+void mouseWheel(MouseEvent event) {
+  if (paused) {
+    historyIndex += (int) event.getAmount();
+    //TODO clamp scroll to: bottom of screen at index before pause or top of screen at circular(index before pause + 1)
+  }
+}
+
 void keyPressed() {
   if (key == ' ') {
     paused = !paused;
+    
+    if (paused) historyIndexBeforePause = historyIndex;
+    else historyIndex = historyIndexBeforePause;
+    
   } else if (!paused && (key == 'M' || key == 'm')) {
     singletSeed(history, historyIndex);
   } else if (!paused && (key == 'R' || key == 'r')) {
