@@ -7,9 +7,10 @@ int getColor(int state) {
 
 void renderHistory(int[][] history, InformationSpectrum[] spectralHistory, int historyIndex, int renderedHistory, int cellSize) {
   for (int i = 0; i < renderedHistory; i++) {
-    int circularIndex = (historyIndex + i + 1) % history.length;
-    renderLine(i, history[circularIndex], cellSize);
-    renderSpectrumLine(i, spectralHistory[circularIndex], cellSize, history[0].length * cellSize);
+    int circularIndex = (historyIndex - i) % history.length;
+    circularIndex = circularIndex < 0 ? history.length + circularIndex : circularIndex;
+    renderLine(renderedHistory - i, history[circularIndex], cellSize);
+    renderSpectrumLine(renderedHistory - i, spectralHistory[circularIndex], cellSize, history[0].length * cellSize);
   }
 }
 

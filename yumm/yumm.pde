@@ -13,7 +13,7 @@ int scopeWidth = 8;
 int scopeHeight = 6;
 
 int framerate = 24;
-int historySize = 200;
+int historySize = 500;
 
 boolean contiguousSpectrum = true;
 
