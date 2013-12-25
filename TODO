@@ -1,17 +1,18 @@
-- scrollable history when paused
-
-- save/load
-	- either use selectFolder() function or write my own bitchin' interface (the latter would be good so that navigating the saved rules looks sweet/informative)
-
-- undoable rule changes
-	- it would be good if this were somehow informative, because just seeing the rule menu change won't be very good.  perhaps the change marker system that's coming
 
 - simultaneous render of contiguous and non contiguous to see which one is better.  the former has more intricate structure, but maybe they offer distinct enough information to render one from the right in one color and another from the left in another color
+
+- implement waveform generator based upon InformationSpectrum parameters and framerate.
 
 - overlay information frequency distribution as dynamic curve at bottom right
 	- draggable left and right boundary bars for use with sound interface
 
-- implement waveform generator based upon InformationSpectrum parameters and framerate.
+- save/load
+	- either use selectFolder() function or write my own bitchin' interface (the latter would be good so that navigating the saved rules looks sweet/informative)
+	- should save with current seed for looping.  user can random/unity if he wants.
+
+- undoable rule changes
+	- it would be good if this were somehow informative, because just seeing the rule menu change won't be very good.  perhaps the change marker system that's coming
+	- maybe some kind of visible stack?
 
 - add rule outliner to scope
 

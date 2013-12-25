@@ -13,7 +13,7 @@ int scopeWidth = 8;
 int scopeHeight = 6;
 
 int framerate = 24;
-int historySize = 500;
+int historySize = 1000;
 
 boolean contiguousSpectrum = true;
 
@@ -153,8 +153,22 @@ void mouseDragged() {
 
 void mouseWheel(MouseEvent event) {
   if (paused) {
-    historyIndex += (int) event.getAmount();
-    //TODO clamp scroll to: bottom of screen at index before pause or top of screen at circular(index before pause + 1)
+    
+    int beforeScroll = historyIndex;
+    historyIndex += ((int) event.getAmount()) % history.length;
+    
+    // clamp scroll to bottom of screen at index before pause
+    if (beforeScroll <= historyIndexBeforePause && 
+        historyIndex > historyIndexBeforePause)
+          historyIndex = historyIndexBeforePause;
+    
+    //clamp scroll to top of screen at index before pause + 1
+    int screenTopBeforeScroll = beforeScroll - renderedHistory;
+    int screenTopAfterScroll = historyIndex - renderedHistory;
+    
+    if (screenTopBeforeScroll >= historyIndexBeforePause - history.length && 
+        screenTopAfterScroll < historyIndexBeforePause - history.length)
+          historyIndex = renderedHistory + historyIndexBeforePause - history.length;
   }
 }
 
