@@ -25,7 +25,7 @@ void renderSpectrumLine(int line, InformationSpectrum spectrum, int cellSize, in
   for (int j = spectrum.getMinBlockSize(); j <= spectrum.getMaxBlockSize(); j++) {
     int intensity = (int) (255.0 * ((float) spectrum.getBlockSizeFrequency(j)) / ((float) spectrum.getMaxBlockSize()));
     fill(intensity, intensity, intensity);
-    int cellWidth = contiguousSpectrum ? cellSize * 2 : cellSize;
+    int cellWidth = spectrum.isContiguous() ? cellSize * 2 : cellSize;
     rect(horizOffset + j * cellWidth, line * cellSize, cellWidth, cellSize);
   }
 }

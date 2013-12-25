@@ -22,7 +22,7 @@ void calculateNext(int[][] history, int historyIndex, int[][][] nextMap) {
 void analyzeNextSpectrum(int[][] history, InformationSpectrum[] spectralHistory, int historyIndex) {
   //handle history in a circular way
   int nextIndex = (historyIndex + 1) % history.length;
-  spectralHistory[nextIndex] = new InformationSpectrum(history[nextIndex], contiguousSpectrum);
+  spectralHistory[nextIndex] = new InformationSpectrum(history[nextIndex], spectralHistory[nextIndex].isContiguous());
 }
 
 void updateRuleFrequency(int[][][] ruleFrequency, int[][] history, int historyIndex) {
