@@ -1,7 +1,10 @@
 
-- simultaneous render of contiguous and non contiguous to see which one is better.  the former has more intricate structure, but maybe they offer distinct enough information to render one from the right in one color and another from the left in another color
+- use only contiguous spectrum for sound production.  faster with cleaner information. purge the other spectrum 
+	- non contiguous is prettier to look at, but it'll be much fuglier and smeared out to listen to.  it's also really fucking slow.  multithreading actually slowed me down, but oh well.  i'm working with integers and arrays, after all.  that shit's fast.
 
 - implement waveform generator based upon InformationSpectrum parameters and framerate.
+
+- put a square root envelope over the the visual intensity map to improve the visibility like the translucent green rectangle did.
 
 - overlay information frequency distribution as dynamic curve at bottom right
 	- draggable left and right boundary bars for use with sound interface

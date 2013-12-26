@@ -2,7 +2,7 @@ import infospect.InformationSpectrum;
 
 color backCol = #1c1c1c;
 
-int habSize = 60;
+int habSize = 80;
 int cellSize = 5;
 int renderedHistory = 160;
 
@@ -12,7 +12,7 @@ int scopeMagnification = pauseCellSize / cellSize;
 int scopeWidth = 8;
 int scopeHeight = 6;
 
-int framerate = 24;
+int framerate = 60;
 int historySize = 160;
 
 boolean contiguousSpectrum = true;
