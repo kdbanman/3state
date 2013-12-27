@@ -12,10 +12,8 @@ int scopeMagnification = pauseCellSize / cellSize;
 int scopeWidth = 8;
 int scopeHeight = 6;
 
-int framerate = 60;
+int framerate = 30;
 int historySize = 160;
-
-boolean contiguousSpectrum = true;
 
 boolean freezeForError = false;
 
@@ -28,7 +26,6 @@ int historyIndexBeforePause;
 int[][][] ruleFrequency;
 
 InformationSpectrum[] spectralHistory;
-InformationSpectrum[] contiguousSpectralHistory;
 
 int cellViewWidth;
 
@@ -70,14 +67,12 @@ void setup() {
   ruleFrequency = new int[3][3][3];
   
   spectralHistory = new InformationSpectrum[historySize];
-  contiguousSpectralHistory = new InformationSpectrum[historySize];
   
   //initialize spectra
   println("loading");
   int prev = 0;
   for (int i = 0; i < historySize; i++) {
-    spectralHistory[i] = new InformationSpectrum(history[i], false);
-    contiguousSpectralHistory[i] = new InformationSpectrum(history[i], true);
+    spectralHistory[i] = new InformationSpectrum(history[i], true);
     
     // print progress
     if (int(float(i) / float(historySize) * 10) > prev) {
@@ -104,26 +99,10 @@ void draw() {
     updateRuleFrequency(ruleFrequency, history, historyIndex);
     calculateNext(history, historyIndex, nextMap);
     analyzeNextSpectrum(history, spectralHistory, historyIndex);
-    analyzeNextSpectrum(history, contiguousSpectralHistory, historyIndex);
     historyIndex = (historyIndex + 1) % history.length;
   }
   //render
-  if (contiguousSpectrum) {
-    renderHistory(history,  contiguousSpectralHistory, historyIndex, renderedHistory, cellSize);
-  } else {
-    renderHistory(history,  spectralHistory, historyIndex, renderedHistory, cellSize);
-  }
-  
-  // highlight history if it is moused over
-  if (mouseX > cellViewWidth + 2 * cellSize) {
-    int menuButtonsClickX = mouseX - menuX + pauseCellSize / 2;
-    int menuButtonsClickY = mouseY - menuY + pauseCellSize / 2;
-    if (menuButtonsClickX <= pauseCellSize || menuButtonsClickX >= 13*pauseCellSize ||
-      menuButtonsClickY <= pauseCellSize || menuButtonsClickY >= 28*pauseCellSize) {
-        fill(0x2200FF79);
-        rect(cellViewWidth + 2 * cellSize, 0, width - (cellViewWidth + 2 * cellSize), height);
-    }
-  }
+  renderHistory(history,  spectralHistory, historyIndex, renderedHistory, cellSize);
   
   // load pixels before menu has been rendered to look underneath it
   loadPixels();
@@ -147,8 +126,6 @@ void mouseClicked() {
     nextMap[i][j][k] = (nextMap[i][j][k] + 1) % 3;
     
     println(mapString(nextMap));
-  } else if (mouseX > cellViewWidth + 2 * cellSize ) {
-    contiguousSpectrum = !contiguousSpectrum;
   }
 }
 

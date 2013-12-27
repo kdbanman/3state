@@ -1,7 +1,3 @@
-
-- use only contiguous spectrum for sound production.  faster with cleaner information. purge the other spectrum 
-	- non contiguous is prettier to look at, but it'll be much fuglier and smeared out to listen to.  it's also really fucking slow.  multithreading actually slowed me down, but oh well.  i'm working with integers and arrays, after all.  that shit's fast.
-
 - implement waveform generator based upon InformationSpectrum parameters and framerate.
 
 - put a square root envelope over the the visual intensity map to improve the visibility like the translucent green rectangle did.
@@ -25,4 +21,10 @@
 
 - minimal boundary-less tiles like logan's projecty desnignenigfey thing.  also that thing duncan said with the 3d.
 	- optional mode
+
+IMPORTANT COMPLETED NOTES
+=========================
+
+- use only contiguous spectrum for sound production.  faster with cleaner information. purge the other spectrum 
+	- non contiguous is prettier to look at, but it'll be much fuglier and smeared out to listen to.  it's also really fucking slow.  multithreading actually slowed me down, but oh well.  i'm working with integers and arrays, after all.  that shit's fast.
 
