@@ -7,12 +7,12 @@ This tool lets you explore the entire space of 3 state one-dimensional cellular 
 The **entire** space!  That's over 7.6 trillion possible rule combinations!  Though many of them are isometric.
 Here are some pretty examples:
 
-![](yumm/example/7601533564397.tif)
-![](yumm/example/3701415564543.tif)
-![](yumm/example/3701415564555.tif)
-![](yumm/example/220211201112112212111200000.tif)
-![](yumm/example/220210011112102212111210020.tif)
-![](yumm/example/020210111111122212111220020.tif)
+![](yumm/example/7601533564397.png)
+![](yumm/example/3701415564543.png)
+![](yumm/example/3701415564555.png)
+![](yumm/example/220211201112112212111200000.png)
+![](yumm/example/220210011112102212111210020.png)
+![](yumm/example/020210111111122212111220020.png)
 
 ###To Run:
 
